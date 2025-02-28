@@ -1,0 +1,25 @@
+version: '3'
+services:
+  frontend:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./frontend:/var/www/portfolio/frontend
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./certbot/conf:/etc/letsencrypt
+    depends_on:
+      - backend
+
+  backend:
+    build: ./backend
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - EMAIL_USER=${EMAIL_USER}
+      - EMAIL_PASS=${EMAIL_PASS}
+    volumes:
+      - ./backend:/usr/src/app 
